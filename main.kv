@@ -1,0 +1,50 @@
+CustomLayout:
+    orientation: "vertical"
+
+    MDToolbar:
+        title: "Diagnose your passion fruit!"
+        elevation: 20
+        anchor_title: 'center'
+    Widget:
+        id: img_widget
+        size_hint: .8, None
+        height: self.width/1.5
+        md_bg_color: app.theme_cls.primary_color
+        canvas.after:
+            Color:
+                id: bus_color
+                rgba: 1, 0, 0, 1
+            Line:
+                width: 1.
+                rectangle: (self.center_x - self.width*.375, self.center_y - self.height*.53, self.width, self.height)
+
+        Image:
+            id: inference_img
+            source: 'placeholder.png'
+            pos: img_widget.center_x - self.width*.375, img_widget.center_y - img_widget.height*.53
+            size: img_widget.width, img_widget.height
+
+        MDSpinner:
+            id: spinner
+            size: dp(46), dp(46)
+            center: img_widget.center_x + img_widget.width*.125, img_widget.center_y
+            active: root.detecting
+
+    FloatLayout:
+        orientation: 'vertical'
+
+        MDLabel:
+            id: img_info
+            text: 'No image selected!'
+            halign: 'center'
+            pos_hint: {'center_x': .5, 'center_y': .6}
+        MDFloatingActionButton:
+            icon: "image"
+            md_bg_color: app.theme_cls.primary_color
+            on_release: root.file_manager_open()
+            pos_hint: {'center_x': .9, 'center_y': .62}
+        MDRoundFlatIconButton:
+            text: "Detect health"
+            icon: "head-question"
+            pos_hint: {'center_x': .5, 'center_y': .2}
+            on_release: root.infer(inference_img.source)
