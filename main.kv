@@ -23,6 +23,11 @@ CustomLayout:
             source: 'placeholder.png'
             pos: img_widget.center_x - self.width*.375, img_widget.center_y - img_widget.height*.53
             size: img_widget.width, img_widget.height
+        MDIconButton:
+            icon: "open-in-app"
+            icon_size: "64sp"
+            center: img_widget.center_x + img_widget.width*.5, img_widget.center_y - img_widget.height*.5
+            on_release: root.open_dialog()
 
         MDSpinner:
             id: spinner
@@ -43,8 +48,10 @@ CustomLayout:
             md_bg_color: app.theme_cls.primary_color
             on_release: root.file_manager_open()
             pos_hint: {'center_x': .9, 'center_y': .62}
+            disabled: root.detecting
         MDRoundFlatIconButton:
             text: "Detect health"
             icon: "head-question"
             pos_hint: {'center_x': .5, 'center_y': .2}
             on_release: root.infer(inference_img.source)
+            disabled: root.detecting

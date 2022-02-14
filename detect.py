@@ -29,14 +29,6 @@ class DetectFruitHealth:
         response = requests.post(url=url, files=payload)
         if response.status_code == 200:
             image = np.array(json.loads(response.text).get('results'))
-
-            # image = Image.fromarray(image.astype('uint8'), 'RGB')
-            #
-            # # enhance image contrast
-            # contrast_enhancer = ImageEnhance.Contrast(image)
-            # image = contrast_enhancer.enhance(2)
-
-            image = np.asarray(image)
             img_path = 'inference_outputs/output{:}.jpg'.format(datetime.datetime.now())
             cv2.imwrite(img_path, image)
             self.output_image_path = img_path

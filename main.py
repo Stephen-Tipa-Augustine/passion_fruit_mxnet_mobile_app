@@ -3,29 +3,37 @@ from kivy.lang import Builder
 from kivy.uix.boxlayout import BoxLayout
 from kivymd.app import MDApp
 from kivymd.uix.filemanager import MDFileManager
+from kivymd.utils.fitimage import FitImage
+
 from detect import DetectFruitHealth
-from kivy.properties import BooleanProperty
+from kivy.properties import BooleanProperty, ObjectProperty
 from kivymd.toast import toast
 from kivy.clock import Clock
 from kivy.utils import platform
+from kivymd.uix.dialog import MDDialog
 
 PRIMARY_EXTERNAL_STORAGE = '/'
 if platform == "android":
     from android.permissions import request_permissions, Permission
+
     request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
 
     from android.storage import primary_external_storage_path
+
     PRIMARY_EXTERNAL_STORAGE = primary_external_storage_path()
 
 
 class CustomLayout(BoxLayout):
-    detect = BooleanProperty(defaultvalue=False) # Image loaded and program is ready to infer
-    detecting = BooleanProperty(defaultvalue=False) # Program is in inference process
+    detect = BooleanProperty(defaultvalue=False)  # Image loaded and program is ready to infer
+    detecting = BooleanProperty(defaultvalue=False)  # Program is in inference process
+    dialog = ObjectProperty(defaultvalue=None)
 
     def __init__(self, **kwargs):
         super(CustomLayout, self).__init__(**kwargs)
         Window.bind(on_keyboard=self.events)
         self.manager_open = False
+        self.current_image = 'placeholder.png'
+        self.image_model_content = None
         self.file_manager = MDFileManager(
             exit_manager=self.exit_manager,
             select_path=self.select_path,
@@ -48,8 +56,10 @@ class CustomLayout(BoxLayout):
         self.exit_manager()
         self.detect = True
         self.ids.inference_img.source = path
+        self.current_image = path
         if PRIMARY_EXTERNAL_STORAGE != '/':
-            self.ids.img_info.text = path.replace(PRIMARY_EXTERNAL_STORAGE, '')
+            path = path.replace(PRIMARY_EXTERNAL_STORAGE, '')
+        self.ids.img_info.text = path
 
     def exit_manager(self, *args):
         """Called when the user reaches the root of the directory tree."""
@@ -77,10 +87,22 @@ class CustomLayout(BoxLayout):
     def check_inference_result(self, dt):
         if self.detection_model.output_image_path is not None:
             self.ids.inference_img.source = self.detection_model.output_image_path
+            self.current_image = self.detection_model.output_image_path
             self.detecting = False
             self.detection_model.output_image_path = None
             return False
 
+    def open_dialog(self):
+        if not self.dialog:
+            self.image_model_content = FitImage(source=self.current_image, size_hint_y=None, height="248dp")
+            self.dialog = MDDialog(
+                title="Image Modal View",
+                type="custom",
+                content_cls=self.image_model_content,
+            )
+        else:
+            self.image_model_content.source = self.current_image
+        self.dialog.open()
 
 
 class MainApp(MDApp):
