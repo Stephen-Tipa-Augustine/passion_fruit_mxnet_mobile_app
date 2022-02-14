@@ -46,10 +46,10 @@ requirements = python3,kivy,kivymd,opencv,pillow,android,certifi,urllib3,idna,ch
 #garden_requirements =
 
 # (str) Presplash of the application
-#presplash.filename = %(source.dir)s/data/presplash.png
+presplash.filename = presplash.png
 
 # (str) Icon of the application
-#icon.filename = %(source.dir)s/data/icon.png
+icon.filename = icon.png
 
 # (str) Supported orientation (one of landscape, sensorLandscape, portrait or all)
 orientation = portrait
@@ -85,10 +85,7 @@ fullscreen = 0
 android.presplash_color = darkgray
 
 # (list) Permissions
-android.permissions = INTERNET
-android.permissions = CAMERA
-android.permissions = WRITE_EXTERNAL_STORAGE
-android.permissions = READ_EXTERNAL_STORAGE
+android.permissions = INTERNET,CAMERA
 
 # (int) Target Android API, should be as high as possible.
 #android.api = 27
@@ -322,7 +319,7 @@ warn_on_root = 1
 #    and extend the excluded directories to remove the HD content.
 #
 #[app@demo]
-#title = My Application (demo)
+title = Passion Fruit App
 #
 #[app:source.exclude_patterns@demo]
 #images/hd/*

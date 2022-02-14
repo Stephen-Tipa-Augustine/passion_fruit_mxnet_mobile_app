@@ -11,8 +11,8 @@ from kivy.utils import platform
 
 PRIMARY_EXTERNAL_STORAGE = '/'
 if platform == "android":
-    # from android.permissions import request_permissions, Permission
-    # request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
+    from android.permissions import request_permissions, Permission
+    request_permissions([Permission.READ_EXTERNAL_STORAGE, Permission.WRITE_EXTERNAL_STORAGE])
 
     from android.storage import primary_external_storage_path
     PRIMARY_EXTERNAL_STORAGE = primary_external_storage_path()
